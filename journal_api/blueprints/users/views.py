@@ -8,7 +8,7 @@ users_api_blueprint = Blueprint('users_api',
                              __name__,
                              template_folder='templates')
 
-@users_api_blueprint.route('/', methods=['POST'])
+@users_api_blueprint.route('/register', methods=['POST'])
 def create():
     req_data = request.get_json()
     first_name = req_data['firstName']
@@ -16,4 +16,24 @@ def create():
     email = req_data['email']
     hashed_password = generate_password_hash(req_data['password'])
 
-    return "USERS API"
+    user = User(first_name=first_name, last_name=last_name, email=email, password=hashed_password)
+
+    if user.save():
+        token = encode_auth_token(user)
+        return jsonify({
+                'auth_token': token,
+                'message': 'Successfully created the account. Please log in.',
+                'status': 'success',
+                'user': {
+                    'id': user.id,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'email': user.email,
+                }
+            })
+    else:
+        errors = user.errors
+        return jsonify({
+            'status': 'failed',
+            'message': errors
+        })
