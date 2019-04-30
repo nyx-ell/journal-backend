@@ -110,7 +110,7 @@ def show(id):
     else:
         return jsonify([{
             'status': 'failed',
-            'message': 'Authentication failed.'
+            'message': 'Authentication failed. Could not show journal.'
         }])
 
 
@@ -154,6 +154,35 @@ def update(id):
         else:
             return jsonify([{
                 'status': 'failed',
-                'message': 'Journal update failed.'
+                'message': 'Failed to upload journal entry.'
             }])
 
+        
+@journals_api_blueprint.route('/<id>/delete', methods=['POST'])
+def destroy(id):
+    auth_header = request.headers.get('Authorization')
+
+    if auth_header:
+        token = auth_header.split(" ")[1]
+    else:
+        return jsonify([{
+            'status': 'failed',
+            'message': 'Not authorization header.'
+        }])
+
+    decoded = decode_auth_token(token)
+    user = User.get(User.id == decoded)
+
+    if user:
+        journal = JournalEntry.get(JournalEntry.id == id)
+        journal.delete_instance()
+
+        return jsonify({
+            'message': 'Successfully deleted journal entry',
+            'status': 'success',
+        })
+    else:
+        return jsonify([{
+            'status': 'failed',
+            'message': 'Failed to delete journal entry.'
+        }])
