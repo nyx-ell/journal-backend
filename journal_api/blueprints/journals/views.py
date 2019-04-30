@@ -114,3 +114,46 @@ def show(id):
         }])
 
 
+@journals_api_blueprint.route('/<id>', methods=['POST'])
+def update(id):
+    auth_header = request.headers.get('Authorization')
+
+    if auth_header:
+        token = auth_header.split(" ")[1]
+    else:
+        return jsonify([{
+            'status': 'failed',
+            'message': 'Not authorization header.'
+        }])
+
+    decoded = decode_auth_token(token)
+    user = User.get(User.id == decoded)
+
+    if user:
+        req_data = request.get_json()
+        title = req_data['title']
+        content = req_data['content']
+
+        journal = JournalEntry.get(JournalEntry.id == id)
+        journal.title = title
+        journal.content = content
+
+        if journal.save():
+            return jsonify({
+                'message': 'Successfully updated journal entry',
+                'status': 'success',
+                'journal': {
+                    'id': journal.id,
+                    'created_at': journal.created_at,
+                    'updated_at': journal.updated_at,
+                    'user_id': journal.user_id,
+                    'title': journal.title,
+                    'content': journal.content
+                }
+            })
+        else:
+            return jsonify([{
+                'status': 'failed',
+                'message': 'Journal update failed.'
+            }])
+
