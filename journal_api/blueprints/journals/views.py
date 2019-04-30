@@ -7,6 +7,38 @@ journals_api_blueprint = Blueprint('journals_api',
                              __name__,
                              template_folder='templates')
 
+@journals_api_blueprint.route('/', methods=['GET'])
+def index():
+    auth_header = request.headers.get('Authorization')
+
+    if auth_header:
+        token = auth_header.split(" ")[1]
+    else:
+        return jsonify([{
+            'status': 'failed',
+            'message': 'Not authorization header.'
+        }])
+
+    decoded = decode_auth_token(token)
+    user = User.get(User.id == decoded)
+
+    if user:
+        journals = JournalEntry.select().where(JournalEntry.user_id == user.id)
+        return jsonify({
+            'message': 'Successfully retrieved user journal',
+            'status': 'success',
+            'journals': [{'id': journal.id,
+                'created_at': journal.created_at,
+                'updated_at': journal.updated_at,
+                'title': journal.title,
+                'content': journal.content} for journal in journals],
+        })
+    else:
+        return jsonify([{
+            'status': 'failed',
+            'message': 'Authentication failed.'
+        }])
+
 @journals_api_blueprint.route('/new', methods=['POST'])
 def create():
     req_data = request.get_json()
