@@ -20,6 +20,7 @@ def create():
 
     if user.save():
         token = encode_auth_token(user)
+        
         return jsonify({
                 'auth_token': token,
                 'message': 'Successfully created the account. Please log in.',
@@ -29,7 +30,8 @@ def create():
                     'first_name': user.first_name,
                     'last_name': user.last_name,
                     'email': user.email,
-                }
+                },
+                'redirect':'http://localhost:3000/journals/'
             })
     else:
         errors = user.errors

@@ -26,7 +26,9 @@ def create():
                     'first_name': user.first_name,
                     'last_name': user.last_name,
                     'email': user.email
-                }})
+                },
+                'redirect':'http://localhost:3000/journals/'
+            })
         else:
             return jsonify({
                 'status': 'failed',
