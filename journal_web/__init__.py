@@ -7,13 +7,19 @@ from .util.assets import bundles
 assets = Environment(app)
 assets.register(bundles)
 
-app.register_blueprint(users_blueprint, url_prefix="/users")
-
-@app.errorhandler(500)
-def internal_server_error(e):
-    return render_template('500.html'), 500
-
-
 @app.route("/")
-def home():
-    return render_template('home.html')
+@app.route('/<path:path>')
+def home(path=None):
+    return render_template('index.html')
+
+@app.route("/manifest.json")
+def manifest():
+    return app.send_static_file("build/manifest.json")
+
+@app.route("/service-worker.js")
+def service():
+    return app.send_static_file("build/service-worker.js")
+
+@app.route("/precache-manifest.7baad691784c83709295e346bbcb96a4")
+def precache():
+    return app.send_static_file("build/precache-manifest.7baad691784c83709295e346bbcb96a4")
