@@ -1,5 +1,4 @@
 from flask import Blueprint, jsonify, request
-import jwt
 from models.user import User
 from werkzeug.security import generate_password_hash
 from helpers import encode_auth_token, decode_auth_token
@@ -31,7 +30,7 @@ def create():
                     'last_name': user.last_name,
                     'email': user.email,
                 },
-                'redirect':'http://localhost:3000/journals/'
+                'redirect':'https://journal-nyx.herokuapp.com/api/v1/journals/'
             })
     else:
         errors = user.errors

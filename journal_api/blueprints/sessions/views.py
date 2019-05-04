@@ -27,7 +27,7 @@ def create():
                     'last_name': user.last_name,
                     'email': user.email
                 },
-                'redirect':'http://localhost:3000/journals/'
+                'redirect':'https://journal-nyx.herokuapp.com/api/v1/journals/'
             })
         else:
             return jsonify({

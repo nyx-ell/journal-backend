@@ -5,7 +5,6 @@ from flask import Blueprint, jsonify, request
 from werkzeug.utils import secure_filename
 from helpers import encode_auth_token, decode_auth_token, allowed_file, upload_file_to_s3
 import datetime
-from flask_cors import cross_origin
 
 journals_api_blueprint = Blueprint('journals_api',
                              __name__,
@@ -99,7 +98,7 @@ def create():
                             'content': journal_entry.content,
                             'image_path': journal_entry.image_path,
                         },
-                        'redirect':'http://localhost:3000/journals/'
+                        'redirect':'https://journal-nyx.herokuapp.com/api/v1/journals/'
                     })
             else:
                 errors = journal_entry.errors
@@ -108,10 +107,10 @@ def create():
                     'message': errors
                 })
     else:
-            return jsonify([{
-                'status': 'failed',
-                'message': 'User cannot be found.'
-            }])
+        return jsonify([{
+            'status': 'failed',
+            'message': 'Authentication failed.'
+        }])
 
 
 @journals_api_blueprint.route('/<id>', methods=['GET'])
@@ -147,7 +146,7 @@ def show(id):
     else:
         return jsonify([{
             'status': 'failed',
-            'message': 'Authentication failed. Could not show journal.'
+            'message': 'Authentication failed.'
         }])
 
 
@@ -173,6 +172,7 @@ def update(id):
         content = req_data['content']
 
         # check if request has file
+        # if no new file uploaded, use current image_path
         if 'file' not in request.files:
             output = journal_entry.image_path
         else:
@@ -239,5 +239,5 @@ def destroy(id):
     else:
         return jsonify([{
             'status': 'failed',
-            'message': 'Failed to delete journal entry.'
+            'message': 'Authentication failed.'
         }])
