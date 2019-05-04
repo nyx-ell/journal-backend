@@ -1,5 +1,9 @@
 import os
 from urllib.parse import urlparse
+# import psycopg2
+
+# DATABASE_URL = os.environ['DATABASE_URL']
+# conn = psycopg2.connect(DATABASE_URL, sllmode='require')
 
 def parse_db_url(database_url):
     parsed = urlparse(database_url)
