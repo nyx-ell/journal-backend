@@ -30,7 +30,7 @@ def create():
                     'last_name': user.last_name,
                     'email': user.email,
                 },
-                'redirect':'https://journal-nyx.herokuapp.com/api/v1/journals/'
+                'redirect':'https://journal-nyx.herokuapp.com/journals/'
             })
     else:
         errors = user.errors
