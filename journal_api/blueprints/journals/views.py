@@ -4,7 +4,7 @@ from models.journal_entry import JournalEntry
 from flask import Blueprint, jsonify, request
 from werkzeug.utils import secure_filename
 from helpers import encode_auth_token, decode_auth_token, allowed_file, upload_file_to_s3
-from config import S3
+from config import S3_BUCKET
 import datetime
 
 journals_api_blueprint = Blueprint('journals_api',
@@ -83,7 +83,7 @@ def create():
 
         if file and allowed_file(file.filename):
             file.filename = secure_filename(str(user_id) + str(datetime.datetime.now()) + file.filename)
-            output = upload_file_to_s3(file, 'journal-nyx')
+            output = upload_file_to_s3(file, S3_BUCKET)
             
             journal_entry = JournalEntry(user_id=user_id, title=title, content=content, image_path=output)
 
@@ -178,7 +178,7 @@ def update(id):
             file = request.files['file']
             if file and allowed_file(file.filename):
                 file.filename = secure_filename(str(user.id) + str(datetime.datetime.now()) + file.filename)
-                output = upload_file_to_s3(file, 'journal-nyx')
+                output = upload_file_to_s3(file, S3_BUCKET)
 
         journal_entry.title = title
         journal_entry.content = content
