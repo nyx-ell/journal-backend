@@ -20,6 +20,6 @@ def manifest():
 def service():
     return app.send_static_file("build/service-worker.js")
 
-@app.route("/precache-manifest.f6801ba3452b97d1e52c1c631dccc1f4.js")
+@app.route("/precache-manifest.322590f41ec23386411d3cb10f26a475.js")
 def precache():
-    return app.send_static_file("build/precache-manifest.f6801ba3452b97d1e52c1c631dccc1f4.js")
+    return app.send_static_file("build/precache-manifest.322590f41ec23386411d3cb10f26a475.js")

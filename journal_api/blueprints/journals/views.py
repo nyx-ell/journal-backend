@@ -196,7 +196,8 @@ def update(id):
                     'title': journal_entry.title,
                     'content': journal_entry.content,
                     'image_path': journal_entry.image_path
-                }
+                },
+                'redirect':'https://journal-nyx.herokuapp.com/journals/'
             })
         else:
             errors = journal_entry.errors
@@ -228,6 +229,7 @@ def destroy(id):
         return jsonify({
             'message': 'Successfully deleted journal entry',
             'status': 'success',
+            'redirect':'https://journal-nyx.herokuapp.com/journals/'
         })
     else:
         return jsonify([{
