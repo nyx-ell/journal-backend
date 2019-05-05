@@ -82,7 +82,7 @@ def create():
 
         if file and allowed_file(file.filename):
             file.filename = secure_filename(str(user_id) + str(datetime.datetime.now()) + file.filename)
-            output = upload_file_to_s3(file, app.config.get('S3_BUCKET')
+            output = upload_file_to_s3(file, app.config.get('S3_BUCKET'))
             
             journal_entry = JournalEntry(user_id=user_id, title=title, content=content, image_path=output)
 
