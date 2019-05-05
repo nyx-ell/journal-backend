@@ -73,16 +73,16 @@ def create():
             })
 
         file = request.files['file']
-        # # if user does not select file, browser also submit an empty part without filename
-        # if file.filename == '':
-        #     return jsonify({
-        #         'status': 'failed',
-        #         'message': 'No selected file'
-        #     })
+        # if user does not select file, browser also submit an empty part without filename
+        if file.filename == '':
+            return jsonify({
+                'status': 'failed',
+                'message': 'No selected file'
+            })
 
         if file and allowed_file(file.filename):
             file.filename = secure_filename(str(user_id) + str(datetime.datetime.now()) + file.filename)
-            output = upload_file_to_s3(file, app.config.get('S3_BUCKET'))
+            output = upload_file_to_s3(file, 'journal-nyx')
             
             journal_entry = JournalEntry(user_id=user_id, title=title, content=content, image_path=output)
 
@@ -97,7 +97,7 @@ def create():
                             'content': journal_entry.content,
                             'image_path': journal_entry.image_path,
                         },
-                        # 'redirect':'https://journal-nyx.herokuapp.com/journals/'
+                        'redirect':'https://journal-nyx.herokuapp.com/journals/'
                     })
             else:
                 errors = journal_entry.errors
@@ -183,7 +183,7 @@ def update(id):
             #     })
             if file and allowed_file(file.filename):
                 file.filename = secure_filename(str(user.id) + str(datetime.datetime.now()) + file.filename)
-                output = upload_file_to_s3(file, app.config.get('S3_BUCKET'))
+                output = upload_file_to_s3(file, 'journal-nyx')
 
         journal_entry.title = title
         journal_entry.content = content
