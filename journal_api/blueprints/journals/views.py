@@ -61,10 +61,9 @@ def create():
     user = User.get(User.id == decoded)
 
     if user:
-        req_data = request.form
-        user_id = req_data['user_id']
-        title = req_data['title']
-        content = req_data['content']
+        user_id = request.form.get('user_id')
+        title = request.form.get('title')
+        content = request.form.get('content')
     
         # check if request has file
         if 'file' not in request.files:
@@ -83,7 +82,7 @@ def create():
 
         if file and allowed_file(file.filename):
             file.filename = secure_filename(str(user_id) + str(datetime.datetime.now()) + file.filename)
-            output = upload_file_to_s3(file, app.config.get('S3_BUCKET'))
+            output = upload_file_to_s3(file, app.config.get('S3_BUCKET')
             
             journal_entry = JournalEntry(user_id=user_id, title=title, content=content, image_path=output)
 
@@ -167,9 +166,8 @@ def update(id):
     journal_entry = JournalEntry.get(JournalEntry.id == id)
 
     if user and journal_entry:
-        req_data = request.form
-        title = req_data['title']
-        content = req_data['content']
+        title = request.form.get('title')
+        content = request.form.get('content')
 
         # check if request has file
         # if no new file uploaded, use current image_path
