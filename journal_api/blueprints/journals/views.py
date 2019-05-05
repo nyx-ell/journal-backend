@@ -13,7 +13,7 @@ journals_api_blueprint = Blueprint('journals_api',
 
 @journals_api_blueprint.route('/', methods=['GET'])
 def index():
-    auth_header = request.data.get('Authorization')
+    auth_header = request.headers.get('Authorization')
 
     if auth_header:
         token = auth_header.split(" ")[1]
