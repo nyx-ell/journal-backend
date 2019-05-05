@@ -97,7 +97,7 @@ def create():
                             'content': journal_entry.content,
                             'image_path': journal_entry.image_path,
                         },
-                        'redirect':'https://journal-nyx.herokuapp.com/journals/'
+                        # 'redirect':'https://journal-nyx.herokuapp.com/journals/'
                     })
             else:
                 errors = journal_entry.errors
