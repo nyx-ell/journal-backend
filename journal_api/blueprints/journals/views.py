@@ -4,6 +4,7 @@ from models.journal_entry import JournalEntry
 from flask import Blueprint, jsonify, request
 from werkzeug.utils import secure_filename
 from helpers import encode_auth_token, decode_auth_token, allowed_file, upload_file_to_s3
+from config import S3
 import datetime
 
 journals_api_blueprint = Blueprint('journals_api',
@@ -175,12 +176,6 @@ def update(id):
             output = journal_entry.image_path
         else:
             file = request.files['file']
-            # # if user does not select file, browser also submit an empty part without filename
-            # if file.filename == '':
-            #     return jsonify({
-            #         'status': 'failed',
-            #         'message': 'No selected file'
-            #     })
             if file and allowed_file(file.filename):
                 file.filename = secure_filename(str(user.id) + str(datetime.datetime.now()) + file.filename)
                 output = upload_file_to_s3(file, 'journal-nyx')
