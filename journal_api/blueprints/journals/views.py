@@ -74,16 +74,16 @@ def create():
             })
 
         file = request.files['file']
-        # if user does not select file, browser also submit an empty part without filename
-        if file.filename == '':
-            return jsonify({
-                'status': 'failed',
-                'message': 'No selected file'
-            })
+        # # if user does not select file, browser also submit an empty part without filename
+        # if file.filename == '':
+        #     return jsonify({
+        #         'status': 'failed',
+        #         'message': 'No selected file'
+        #     })
 
         if file and allowed_file(file.filename):
-            file.filename = secure_filename(str(user_id) + str(datetime.datetime.now()) +  '=' + file.filename)
-            output = upload_file_to_s3(file, app.config['S3_BUCKET'])
+            file.filename = secure_filename(str(user_id) + str(datetime.datetime.now()) + file.filename)
+            output = upload_file_to_s3(file, app.config.get['S3_BUCKET'])
             
             journal_entry = JournalEntry(user_id=user_id, title=title, content=content, image_path=output)
 
@@ -177,15 +177,15 @@ def update(id):
             output = journal_entry.image_path
         else:
             file = request.files['file']
-            # if user does not select file, browser also submit an empty part without filename
-            if file.filename == '':
-                return jsonify({
-                    'status': 'failed',
-                    'message': 'No selected file'
-                })
+            # # if user does not select file, browser also submit an empty part without filename
+            # if file.filename == '':
+            #     return jsonify({
+            #         'status': 'failed',
+            #         'message': 'No selected file'
+            #     })
             if file and allowed_file(file.filename):
-                file.filename = secure_filename(str(user.id) + str(datetime.datetime.now()) + '=' + file.filename)
-                output = upload_file_to_s3(file, app.config['S3_BUCKET'])
+                file.filename = secure_filename(str(user.id) + str(datetime.datetime.now()) + file.filename)
+                output = upload_file_to_s3(file, app.config.get['S3_BUCKET'])
 
         journal_entry.title = title
         journal_entry.content = content
